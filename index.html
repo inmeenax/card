@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071d18">
+  <title>Call Break — Card Table</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Call Break home"><span class="brand-mark">♠</span><span>CALL <b>BREAK</b><small>CLASSIC CARD TABLE</small></span></a>
+      <div class="top-actions">
+        <span id="roundBadge" class="pill">Round 1 / 5</span>
+        <button id="rulesBtn" class="icon-btn" type="button" aria-haspopup="dialog">Rules</button>
+        <button id="soundBtn" class="icon-btn" type="button" aria-pressed="false">Sound: Off</button>
+      </div>
+    </header>
+
+    <section id="welcomeScreen" class="welcome-screen">
+      <div class="welcome-copy">
+        <div class="eyebrow"><span></span> FOUR PLAYERS · FIVE ROUNDS</div>
+        <h1>Read the table.<br><em>Make your call.</em></h1>
+        <p>A classic Call Break match against three computer opponents. Bid carefully, follow suit, and make every trick count.</p>
+        <div class="welcome-facts"><span>♠ Spades are trump</span><span>52-card deck</span><span>13 tricks per round</span></div>
+        <button id="startBtn" class="primary-btn" type="button">Start new match <span>↗</span></button>
+      </div>
+      <div class="hero-table" aria-hidden="true">
+        <div class="hero-ring"></div><div class="hero-card hero-card-one">A<br><span>♠</span></div><div class="hero-card hero-card-two">K<br><span class="red">♥</span></div><div class="hero-card hero-card-three">Q<br><span>♣</span></div>
+        <div class="hero-chip">♠</div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="game-screen hidden" aria-label="Call Break game">
+      <div class="game-toolbar">
+        <div><span class="eyebrow">MATCH IN PROGRESS</span><h2 id="phaseTitle">Make your call</h2><p id="statusText" aria-live="polite">Choose how many tricks you expect to win.</p></div>
+        <div class="toolbar-right"><button id="newGameBtn" class="secondary-btn" type="button">↻ New match</button></div>
+      </div>
+
+      <div class="game-layout">
+        <aside class="score-panel">
+          <div class="panel-heading"><span>LIVE SCORE</span><span class="live-dot"></span></div>
+          <div id="scoreRows" class="score-rows"></div>
+          <div class="score-foot"><span>TRICKS PLAYED</span><strong id="tricksPlayed">0 / 13</strong></div>
+          <div class="score-foot"><span>TRUMP SUIT</span><strong class="trump-label">♠ Spades</strong></div>
+          <div class="score-foot"><span>YOUR CALL</span><strong id="yourBidLabel">—</strong></div>
+        </aside>
+
+        <div class="table-area">
+          <div class="table-felt">
+            <div class="table-shine"></div>
+            <div id="deckAnimation" class="deck-animation hidden" aria-hidden="true"><div class="shuffle-deck"><span></span><span></span><span></span><span></span></div><strong id="deckCaption">SHUFFLING DECK</strong></div>
+            <div class="seat seat-top" id="seat-north"><div class="avatar">N</div><div class="seat-meta"><strong>Neel</strong><span class="seat-detail">Computer</span></div><span class="bid-tag" id="bid-north">CALL —</span><div class="opponent-cards" id="backs-north" aria-label="Neel's hidden cards"></div></div>
+            <div class="seat seat-left" id="seat-west"><div class="avatar">W</div><div class="seat-meta"><strong>Riya</strong><span class="seat-detail">Computer</span></div><span class="bid-tag" id="bid-west">CALL —</span><div class="opponent-cards" id="backs-west" aria-label="Riya's hidden cards"></div></div>
+            <div class="seat seat-right" id="seat-east"><div class="avatar">A</div><div class="seat-meta"><strong>Kabir</strong><span class="seat-detail">Computer</span></div><span class="bid-tag" id="bid-east">CALL —</span><div class="opponent-cards" id="backs-east" aria-label="Kabir's hidden cards"></div></div>
+            <div class="trick-center" id="trickCenter" aria-label="Current trick">
+              <div class="center-caption" id="centerCaption">THE TRICK</div>
+              <div class="played-card slot-north" id="play-north"></div><div class="played-card slot-west" id="play-west"></div><div class="played-card slot-east" id="play-east"></div><div class="played-card slot-south" id="play-south"></div>
+              <div id="trickMessage" class="trick-message">Spades are trump</div>
+            </div>
+          </div>
+          <div class="human-area">
+            <div class="human-heading"><div class="human-profile"><div class="avatar human-avatar">Y</div><div><strong>You</strong><span id="humanSub">Your hand · 13 cards</span></div></div><div id="turnPill" class="turn-pill">YOUR TURN</div></div>
+            <div id="hand" class="hand" aria-label="Your cards"></div>
+            <div class="hand-help" id="handHelp">Select a highlighted card to play it.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="bidModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="bidTitle">
+    <div class="modal-card bid-modal">
+      <div class="modal-symbol">♠</div><div class="eyebrow">ROUND <span id="bidRound">1</span> CALL</div><h2 id="bidTitle">How many tricks?</h2>
+      <p>Choose the number of tricks you expect to win this round.</p>
+      <div class="bid-picker"><button id="bidMinus" type="button" aria-label="Decrease bid">−</button><output id="bidValue">3</output><button id="bidPlus" type="button" aria-label="Increase bid">+</button></div>
+      <div id="bidHint" class="bid-hint">Aces and high spades are powerful.</div>
+      <button id="confirmBidBtn" class="primary-btn full-btn" type="button">Confirm call <span>→</span></button>
+    </div>
+  </div>
+
+  <div id="roundModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="roundTitle">
+    <div class="modal-card results-modal"><div class="eyebrow">ROUND COMPLETE</div><h2 id="roundTitle">Round 1 results</h2><p id="roundSummary">Here is how everyone scored.</p><div id="roundResults" class="results-table"></div><button id="nextRoundBtn" class="primary-btn full-btn" type="button">Next round <span>→</span></button></div>
+  </div>
+
+  <div id="matchModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="matchTitle">
+    <div class="modal-card results-modal"><div class="trophy">♛</div><div class="eyebrow">MATCH COMPLETE</div><h2 id="matchTitle">The table has spoken.</h2><p id="matchSummary">Final match results</p><div id="matchResults" class="results-table"></div><button id="playAgainBtn" class="primary-btn full-btn" type="button">Play again <span>↻</span></button></div>
+  </div>
+
+  <div id="rulesModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
+    <div class="modal-card rules-modal"><button id="closeRulesBtn" class="close-btn" type="button" aria-label="Close rules">×</button><div class="eyebrow">QUICK GUIDE</div><h2 id="rulesTitle">How to play Call Break</h2><div class="rules-content">
+      <h3>Goal</h3><p>Call how many tricks you expect to win. You play 5 rounds, with 13 cards and 13 tricks in each round.</p>
+      <h3>Card strength</h3><p>A is high, 2 is low. Spades are always trump and beat other suits. If no spade is played, the highest card in the led suit wins.</p>
+      <h3>Playing cards</h3><p>Follow the led suit if you can. In this version, if you can beat the current winning card in that suit, you must overtake. If you cannot follow suit, play a spade if you have one; overtrump an existing spade when possible.</p>
+      <h3>Scoring</h3><p>Meet your call: score your bid. Win extra tricks: add 0.1 per extra trick. Miss your call: lose points equal to your bid. Highest total after five rounds wins.</p>
+      <p class="rule-note">These are configurable house rules. Call Break rules can differ by region and platform.</p>
+    </div><button id="rulesDoneBtn" class="primary-btn full-btn" type="button">Got it</button></div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
